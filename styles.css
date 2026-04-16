@@ -1,0 +1,731 @@
+/* ══════════════════════════════════════════════════════
+   styles.css — モルック スコア管理アプリ
+   モバイルファースト設計 / タップ操作最適化
+══════════════════════════════════════════════════════ */
+
+/* ─── CSS 変数 ──────────────────────────────────────── */
+:root {
+  --c-primary:       #2E7D32;
+  --c-primary-l:     #43A047;
+  --c-primary-d:     #1B5E20;
+  --c-accent:        #F57C00;
+  --c-accent-l:      #FFA726;
+  --c-bg:            #F1F8E9;
+  --c-surface:       #FFFFFF;
+  --c-text:          #1A1A1A;
+  --c-text-2:        #546E7A;
+  --c-winner:        #F9A825;
+  --c-error:         #C62828;
+  --c-disq:          #9E9E9E;
+  --c-zero:          #E65100;
+
+  --r-sm:   8px;
+  --r-md:  12px;
+  --r-lg:  18px;
+  --r-xl:  24px;
+
+  --sh-sm: 0 1px 4px rgba(0,0,0,.12);
+  --sh-md: 0 3px 10px rgba(0,0,0,.15);
+  --sh-lg: 0 8px 24px rgba(0,0,0,.20);
+
+  --dur: .18s;
+}
+
+/* ─── リセット & ベース ─────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  font-family:
+    -apple-system, BlinkMacSystemFont,
+    'Hiragino Sans', 'Yu Gothic UI',
+    'Meiryo', sans-serif;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+/* ─── スクリーン管理 ────────────────────────────────── */
+.screen {
+  display: none;
+  min-height: 100dvh;
+  min-height: 100vh; /* fallback */
+}
+.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden-el { display: none !important; }
+
+
+/* ══════════════════════════════════════════════════════
+   セットアップ画面
+══════════════════════════════════════════════════════ */
+
+#setup-screen {
+  background: linear-gradient(160deg, var(--c-primary-d) 0%, var(--c-primary) 60%, var(--c-primary-l) 100%);
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 16px env(safe-area-inset-bottom, 24px);
+  padding-top: calc(env(safe-area-inset-top, 0px) + 24px);
+  overflow-y: auto;
+}
+
+.setup-wrap {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 32px;
+}
+
+/* ヘッダー */
+.setup-header {
+  text-align: center;
+  padding: 8px 0 12px;
+}
+
+.setup-icon {
+  font-size: 56px;
+  display: block;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.3));
+}
+
+.setup-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+}
+
+.setup-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,.75);
+  margin-top: 2px;
+  letter-spacing: .5px;
+}
+
+/* カード */
+.setup-card {
+  background: rgba(255,255,255,.13);
+  border-radius: var(--r-lg);
+  padding: 18px 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+.setup-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,.7);
+  margin-bottom: 12px;
+}
+
+/* プレイヤー数ボタン */
+.count-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.count-btn {
+  flex: 1;
+  height: 52px;
+  border: 2px solid rgba(255,255,255,.3);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: rgba(255,255,255,.65);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--dur), color var(--dur), border-color var(--dur), transform var(--dur);
+}
+.count-btn.active {
+  background: #fff;
+  border-color: #fff;
+  color: var(--c-primary);
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+.count-btn:active { transform: scale(.94); }
+
+/* 名前入力 */
+.player-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.player-name-row:last-child { margin-bottom: 0; }
+
+.player-name-row label {
+  width: 28px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,.7);
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.player-name-row input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: var(--r-md);
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  transition: border-color var(--dur), background var(--dur);
+}
+.player-name-row input::placeholder { color: rgba(255,255,255,.4); }
+.player-name-row input:focus {
+  border-color: rgba(255,255,255,.75);
+  background: rgba(255,255,255,.22);
+}
+
+/* ゲーム開始ボタン */
+.btn-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: var(--r-lg);
+  background: var(--c-accent);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(245,124,0,.45);
+  transition: transform var(--dur), box-shadow var(--dur), background var(--dur);
+  margin-top: 4px;
+}
+.btn-start:active {
+  transform: scale(.97);
+  box-shadow: 0 3px 10px rgba(245,124,0,.35);
+  background: var(--c-accent-l);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   ゲーム画面
+══════════════════════════════════════════════════════ */
+
+#game-screen {
+  background: var(--c-bg);
+  overflow-y: auto;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+/* ヘッダー */
+.game-header {
+  background: linear-gradient(135deg, var(--c-primary-d) 0%, var(--c-primary) 100%);
+  padding: 14px 16px;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+.game-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.btn-icon {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: rgba(255,255,255,.15);
+  border-radius: var(--r-sm);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--dur), transform var(--dur);
+}
+.btn-icon:active {
+  background: rgba(255,255,255,.3);
+  transform: scale(.92);
+}
+
+
+/* ─── スコアボード ──────────────────────────────────── */
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  padding: 12px 12px 6px;
+}
+
+.player-card {
+  background: var(--c-surface);
+  border-radius: var(--r-md);
+  padding: 12px 12px 10px;
+  border: 2px solid transparent;
+  box-shadow: var(--sh-sm);
+  transition: border-color var(--dur), transform var(--dur), box-shadow var(--dur);
+  min-height: 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 現在プレイヤー */
+.player-card.current {
+  border-color: var(--c-primary);
+  transform: translateY(-3px);
+  box-shadow: var(--sh-md), 0 0 0 3px rgba(46,125,50,.15);
+}
+.player-card.current::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--c-primary);
+}
+
+/* 失格 */
+.player-card.disqualified {
+  opacity: .45;
+  background: #F5F5F5;
+}
+
+/* 優勝 */
+.player-card.winner {
+  border-color: var(--c-winner);
+  background: linear-gradient(160deg, #FFF9C4 0%, #FFFDE7 100%);
+  box-shadow: var(--sh-md), 0 0 0 3px rgba(249,168,37,.2);
+}
+.player-card.winner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--c-winner);
+}
+
+/* 名前 */
+.p-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--c-text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+
+/* スコア数字 */
+.p-score {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--c-text);
+  margin-bottom: 6px;
+  letter-spacing: -2px;
+}
+.player-card.current .p-score { color: var(--c-primary); }
+.player-card.winner  .p-score { color: var(--c-winner); }
+.player-card.disqualified .p-score { color: var(--c-disq); }
+
+.p-unit {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* プログレスバー */
+.p-bar-wrap {
+  height: 5px;
+  background: #E0E0E0;
+  border-radius: 3px;
+  margin-bottom: 7px;
+  overflow: hidden;
+}
+.p-bar {
+  height: 100%;
+  background: var(--c-primary-l);
+  border-radius: 3px;
+  transition: width .5s cubic-bezier(.4, 0, .2, 1);
+}
+.player-card.current .p-bar { background: var(--c-primary); }
+.player-card.winner  .p-bar { background: var(--c-winner); width: 100% !important; }
+
+/* ステータス */
+.p-status {
+  font-size: 11px;
+  font-weight: 700;
+}
+.p-winner-badge { color: var(--c-winner); }
+.p-disq-badge   { color: var(--c-error); }
+
+/* 連続 0 ドット */
+.zeros-track {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.zdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #E0E0E0;
+  display: inline-block;
+  transition: background var(--dur);
+}
+.zdot.on { background: var(--c-zero); }
+
+
+/* ─── 現在プレイヤー ─────────────────────────────────── */
+.current-player {
+  text-align: center;
+  padding: 8px 16px 4px;
+  flex-shrink: 0;
+}
+.current-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--c-text-2);
+  margin-bottom: 1px;
+}
+.current-name {
+  display: block;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--c-primary);
+  letter-spacing: -1px;
+}
+
+
+/* ─── 得点入力 ──────────────────────────────────────── */
+.score-input-area {
+  padding: 6px 12px 4px;
+  flex-shrink: 0;
+}
+
+.score-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+}
+
+/* 1〜12 */
+.score-btn {
+  height: 58px;
+  border: none;
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  color: var(--c-text);
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--sh-sm);
+  transition: transform var(--dur), background var(--dur), color var(--dur), box-shadow var(--dur);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.score-btn:active:not(:disabled) {
+  transform: scale(.91);
+  background: var(--c-primary);
+  color: #fff;
+  box-shadow: var(--sh-md);
+}
+.score-btn:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 0 ボタン（全幅・特別色） */
+.score-btn-zero {
+  grid-column: 1 / -1;
+  height: 50px;
+  font-size: 20px;
+  background: #FFF3E0;
+  color: var(--c-zero);
+  border: 1.5px solid #FFCC80;
+}
+.score-btn-zero:active:not(:disabled) {
+  background: var(--c-zero);
+  color: #fff;
+  border-color: var(--c-zero);
+}
+
+
+/* ─── アクションボタン ──────────────────────────────── */
+.action-row {
+  display: flex;
+  gap: 8px;
+  padding: 6px 12px 4px;
+  flex-shrink: 0;
+}
+
+.btn.btn-action {
+  flex: 1;
+  height: 48px;
+  border: 2px solid #CFD8DC;
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  color: var(--c-text-2);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: background var(--dur), color var(--dur), border-color var(--dur), transform var(--dur);
+}
+.btn.btn-action:active:not(:disabled) {
+  background: var(--c-primary-d);
+  color: #fff;
+  border-color: var(--c-primary-d);
+  transform: scale(.95);
+}
+.btn.btn-action:disabled {
+  opacity: .38;
+  cursor: not-allowed;
+}
+.btn-icon-char { font-size: 17px; }
+
+
+/* ─── 履歴 ──────────────────────────────────────────── */
+.history-area {
+  padding: 10px 12px 20px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.history-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--c-text-2);
+  margin-bottom: 8px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-empty {
+  font-size: 13px;
+  color: var(--c-text-2);
+  text-align: center;
+  padding: 12px 0;
+}
+
+.history-item {
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  background: var(--c-surface);
+  box-shadow: var(--sh-sm);
+  color: var(--c-text-2);
+  line-height: 1.4;
+}
+.history-item.hist-win {
+  background: #FFF9C4;
+  color: #F57F17;
+  font-weight: 700;
+}
+.history-item.hist-over {
+  background: #FFF3E0;
+  color: var(--c-zero);
+  font-weight: 600;
+}
+.history-item.hist-disqualified {
+  background: #FFEBEE;
+  color: var(--c-error);
+  font-weight: 700;
+}
+.history-item.hist-skip {
+  font-style: italic;
+  color: #90A4AE;
+}
+.history-item.hist-normal { color: var(--c-text); }
+
+
+/* ══════════════════════════════════════════════════════
+   オーバーレイ共通
+══════════════════════════════════════════════════════ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(0, 0, 0, .72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: ov-fade-in .2s ease forwards;
+}
+.overlay.hidden { display: none; }
+
+@keyframes ov-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.overlay-card {
+  width: 100%;
+  max-width: 360px;
+  background: linear-gradient(160deg, var(--c-primary-d) 0%, var(--c-primary) 100%);
+  border-radius: var(--r-xl);
+  padding: 36px 24px 28px;
+  text-align: center;
+  box-shadow: var(--sh-lg);
+  animation: ov-slide-up .3s cubic-bezier(.34, 1.56, .64, 1) forwards;
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+@keyframes ov-slide-up {
+  from { transform: translateY(40px) scale(.95); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);   opacity: 1; }
+}
+
+.overlay-trophy {
+  font-size: 72px;
+  display: block;
+  margin-bottom: 12px;
+  animation: trophy-pop .5s cubic-bezier(.34, 1.56, .64, 1) .15s both;
+}
+@keyframes trophy-pop {
+  from { transform: scale(0) rotate(-15deg); }
+  to   { transform: scale(1) rotate(0deg);   }
+}
+
+.overlay-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.overlay-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,.8);
+  margin-bottom: 28px;
+}
+
+.overlay-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* オーバーレイ内ボタン */
+.btn { /* base reset */ cursor: pointer; border: none; border-radius: var(--r-md); font-family: inherit; transition: transform var(--dur), opacity var(--dur), background var(--dur); }
+.btn:active { transform: scale(.96); }
+
+.btn-overlay-primary {
+  padding: 16px;
+  background: var(--c-accent);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  border-radius: var(--r-md);
+  box-shadow: 0 4px 14px rgba(245,124,0,.4);
+}
+.btn-overlay-primary:active { background: var(--c-accent-l); }
+
+.btn-overlay-secondary {
+  padding: 15px;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: var(--r-md);
+  border: 1.5px solid rgba(255,255,255,.3);
+}
+.btn-overlay-secondary:active { background: rgba(255,255,255,.28); }
+
+.btn-overlay-ghost {
+  padding: 13px;
+  background: transparent;
+  color: rgba(255,255,255,.6);
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255,255,255,.2);
+}
+.btn-overlay-ghost:active { background: rgba(255,255,255,.1); }
+
+
+/* ══════════════════════════════════════════════════════
+   レスポンシブ補正
+══════════════════════════════════════════════════════ */
+
+/* 幅 360px 以下（iPhone SE等）*/
+@media (max-width: 360px) {
+  .p-score       { font-size: 34px; }
+  .score-btn     { height: 52px; font-size: 20px; }
+  .score-btn-zero{ height: 46px; }
+}
+
+/* 横向き / タブレット */
+@media (min-width: 600px) {
+  .setup-wrap  { max-width: 480px; }
+  .scoreboard  { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .score-buttons { gap: 10px; }
+  .score-btn   { height: 66px; }
+}
+
+@media (min-width: 768px) {
+  #game-screen {
+    max-width: 520px;
+    margin: 0 auto;
+    box-shadow: var(--sh-lg);
+    min-height: 100dvh;
+  }
+}
+
+/* ダークモード（任意） */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-bg:      #1C2A1D;
+    --c-surface: #263328;
+    --c-text:    #E8F5E9;
+    --c-text-2:  #81C784;
+  }
+  .player-card { box-shadow: none; border-color: rgba(255,255,255,.06); }
+  .score-btn   { background: #2E4033; color: #E8F5E9; }
+  .score-btn-zero { background: #3E2A1A; border-color: #5D4037; color: #FFCC80; }
+  .btn.btn-action { background: #263328; border-color: #37474F; }
+  .history-item   { background: #263328; }
+}

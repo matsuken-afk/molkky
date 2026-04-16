@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#1B5E20">
+  <meta name="description" content="モルック スコア管理アプリ">
+
+  <!-- PWA / iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="モルック">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="stylesheet" href="styles.css">
+  <title>モルック スコア</title>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     セットアップ画面
+══════════════════════════════════════════════════ -->
+<div id="setup-screen" class="screen active" role="main">
+  <div class="setup-wrap">
+
+    <header class="setup-header">
+      <div class="setup-icon" aria-hidden="true">🎯</div>
+      <h1 class="setup-title">モルック</h1>
+      <p class="setup-sub">スコア管理</p>
+    </header>
+
+    <!-- プレイヤー人数 -->
+    <section class="setup-card" aria-labelledby="count-label">
+      <h2 id="count-label" class="setup-card-title">プレイヤー人数</h2>
+      <div class="count-btns" role="group" aria-label="プレイヤー人数選択">
+        <button class="count-btn" data-count="1" aria-pressed="false">1人</button>
+        <button class="count-btn active" data-count="2" aria-pressed="true">2人</button>
+        <button class="count-btn" data-count="3" aria-pressed="false">3人</button>
+        <button class="count-btn" data-count="4" aria-pressed="false">4人</button>
+      </div>
+    </section>
+
+    <!-- プレイヤー名 -->
+    <section class="setup-card" aria-labelledby="names-label">
+      <h2 id="names-label" class="setup-card-title">プレイヤー名</h2>
+      <div id="player-names-container"></div>
+    </section>
+
+    <button id="start-game-btn" class="btn btn-start">
+      ゲーム開始 ▶
+    </button>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     ゲーム画面
+══════════════════════════════════════════════════ -->
+<div id="game-screen" class="screen" role="main">
+
+  <!-- ヘッダー -->
+  <header class="game-header">
+    <h1 class="game-title">🎯 モルック</h1>
+    <button id="reset-btn" class="btn-icon" aria-label="リセット・設定">⚙️</button>
+  </header>
+
+  <!-- スコアボード -->
+  <div id="scoreboard" class="scoreboard" role="region" aria-label="スコアボード"></div>
+
+  <!-- 現在プレイヤー -->
+  <div id="current-player-info" class="current-player" role="status" aria-live="polite">
+    <span class="current-label">現在のターン</span>
+    <span id="current-player-name" class="current-name"></span>
+  </div>
+
+  <!-- 得点入力ボタン -->
+  <div class="score-input-area" role="group" aria-label="得点入力">
+    <div class="score-buttons"></div>
+  </div>
+
+  <!-- アクションボタン -->
+  <div class="action-row">
+    <button id="undo-btn" class="btn btn-action" aria-label="1手戻す">
+      <span class="btn-icon-char" aria-hidden="true">↩</span> 戻す
+    </button>
+    <button id="skip-btn" class="btn btn-action" aria-label="ターンをスキップ">
+      スキップ <span class="btn-icon-char" aria-hidden="true">→</span>
+    </button>
+  </div>
+
+  <!-- 履歴 -->
+  <section class="history-area" aria-labelledby="history-title">
+    <h2 id="history-title" class="history-title">スコア履歴</h2>
+    <div id="history-list" class="history-list" role="log" aria-live="polite"></div>
+  </section>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     ゲームオーバー オーバーレイ
+══════════════════════════════════════════════════ -->
+<div id="game-over-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="winner-text" aria-hidden="true">
+  <div class="overlay-card">
+    <div class="overlay-trophy" aria-hidden="true">🏆</div>
+    <h2 id="winner-text" class="overlay-title"></h2>
+    <p id="winner-score-text" class="overlay-sub"></p>
+    <div class="overlay-btns">
+      <button id="rematch-btn" class="btn btn-overlay-primary">連戦（メンバー維持）</button>
+      <button id="new-game-btn" class="btn btn-overlay-ghost">新しいゲーム</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     リセット確認 オーバーレイ
+══════════════════════════════════════════════════ -->
+<div id="reset-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-label="リセット確認" aria-hidden="true">
+  <div class="overlay-card">
+    <h2 class="overlay-title">リセット</h2>
+    <p class="overlay-sub">どのようにリセットしますか？</p>
+    <div class="overlay-btns">
+      <button id="confirm-rematch" class="btn btn-overlay-primary">連戦（メンバー維持）</button>
+      <button id="confirm-new-game" class="btn btn-overlay-secondary">新しいゲーム</button>
+      <button id="cancel-reset" class="btn btn-overlay-ghost">キャンセル</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="gameLogic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

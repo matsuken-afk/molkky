@@ -1,0 +1,41 @@
+{
+  "name": "モルック スコア管理",
+  "short_name": "モルック",
+  "description": "モルックのスコアをリアルタイムで管理するアプリ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1B5E20",
+  "theme_color": "#1B5E20",
+  "lang": "ja",
+  "scope": "./",
+  "categories": ["games", "sports"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "新しいゲーム",
+      "short_name": "新ゲーム",
+      "description": "新しいゲームを開始する",
+      "url": "./index.html?action=new"
+    }
+  ]
+}

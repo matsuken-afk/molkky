@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 背景 -->
+  <rect width="512" height="512" rx="96" fill="#1B5E20"/>
+
+  <!-- モルックのピン形（中央・白） -->
+  <rect x="226" y="80" width="60" height="200" rx="30" fill="#FFFFFF" opacity="0.95"/>
+  <!-- 色付き帯 -->
+  <rect x="226" y="240" width="60" height="24" rx="6" fill="#F57C00"/>
+
+  <!-- スコア "50" -->
+  <text
+    x="256" y="400"
+    font-size="120"
+    font-weight="900"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    fill="#FFFFFF"
+    font-family="-apple-system, 'Helvetica Neue', sans-serif"
+    letter-spacing="-4"
+  >50</text>
+
+  <!-- 星アクセント -->
+  <circle cx="128" cy="140" r="20" fill="#F57C00" opacity="0.7"/>
+  <circle cx="384" cy="140" r="14" fill="#F57C00" opacity="0.5"/>
+  <circle cx="100" cy="380" r="10" fill="#81C784" opacity="0.6"/>
+  <circle cx="412" cy="360" r="16" fill="#81C784" opacity="0.5"/>
+</svg>
